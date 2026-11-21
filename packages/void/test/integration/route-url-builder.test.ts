@@ -63,13 +63,18 @@ const hrefs: Array<Href> = [
   'mailto:team@example.com',
   'tel:+15550100',
   user,
+  \`\${user}?tab=activity\`,
+  \`\${user}#details\`,
   dynamic as RouteUrl,
   ('https://' + dynamic) as Href,
 ];
+const userWithQuery: RouteUrl = \`\${user}?tab=activity\`;
 // @ts-expect-error unknown routes are rejected
 const unknown: Href = '/unknown';
 // @ts-expect-error unchecked strings are rejected
 const unchecked: Href = dynamic;
+// @ts-expect-error unchecked strings are rejected with a query
+const uncheckedWithQuery: RouteUrl = \`\${dynamic}?tab=activity\`;
 // @ts-expect-error relative paths are rejected
 const relative: Href = '../about';
 // @ts-expect-error protocol-relative URLs are rejected
@@ -78,10 +83,22 @@ const protocolRelative: Href = '//example.com/about';
 const empty: Href = '';
 // @ts-expect-error route URLs exclude external links
 const external: RouteUrl = 'https://vite.dev';
-void [plain, hrefs, unknown, unchecked, relative, protocolRelative, empty, external];
+void [
+  plain,
+  hrefs,
+  userWithQuery,
+  unknown,
+  unchecked,
+  uncheckedWithQuery,
+  relative,
+  protocolRelative,
+  empty,
+  external,
+];
 declare const router: VoidRouter;
 void router.visit('/users/42');
 void router.visit(routeUrl('/about'));
+void router.visit(\`\${routeUrl('/about')}?tab=activity\`);
 void router.visit({ pathname: '/users/:id', params: { id } });
 void router.prefetch(new URL('https://example.com'));
 router.flush('#details');

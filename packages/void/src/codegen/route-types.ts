@@ -190,7 +190,10 @@ export function generateRouteTypes(
   lines.push('  type BuiltRouteUrl = string & { readonly __voidRouteUrl: true };');
   lines.push('  type TypedRoutes = RouteTypesConfig extends { typedRoutes: true } ? true : false;');
   lines.push('  export type RouteUrl = TypedRoutes extends true');
-  lines.push('    ? BuiltRouteUrl | RoutePathUrl | `${RoutePathUrl}${"?" | "#"}${string}`');
+  lines.push('    ? BuiltRouteUrl');
+  lines.push('      | `${BuiltRouteUrl}${"?" | "#"}${string}`');
+  lines.push('      | RoutePathUrl');
+  lines.push('      | `${RoutePathUrl}${"?" | "#"}${string}`');
   lines.push('    : string;');
   lines.push('  export type Href = TypedRoutes extends true');
   lines.push(
